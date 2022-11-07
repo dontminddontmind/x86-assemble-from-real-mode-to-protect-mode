@@ -356,7 +356,7 @@ terminate_current_task:                     ;终止当前任务
                                             ;运行中。此例程其实也是当前任务的
                                             ;一部分 
          pushfd
-         mov edx,[esp]                      ;获得EFLAGS寄存器内容
+         mov edx,[esp]                      ;获得EFLAGS寄存器内容,16位不能访问[sp]
          add esp,4                          ;恢复堆栈指针
 
          mov eax,core_data_seg_sel
@@ -366,7 +366,7 @@ terminate_current_task:                     ;终止当前任务
          jnz .b1                            ;当前任务是嵌套的，到.b1执行iretd 
          mov ebx,core_msg1                  ;当前任务不是嵌套的，直接切换到 
          call sys_routine_seg_sel:put_string
-         jmp far [prgman_tss]               ;程序管理器任务 
+         jmp far [prgman_tss]               ;jmp回程序管理器任务 
        
   .b1: 
          mov ebx,core_msg0
